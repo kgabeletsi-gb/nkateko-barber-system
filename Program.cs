@@ -7,20 +7,19 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    var host = Environment.GetEnvironmentVariable("PGHOST");
-    var port = Environment.GetEnvironmentVariable("PGPORT");
-    var user = Environment.GetEnvironmentVariable("PGUSER");
-    var password = Environment.GetEnvironmentVariable("PGPASSWORD");
-    var database = Environment.GetEnvironmentVariable("PGDATABASE");
+    var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
-    if (!string.IsNullOrEmpty(host))
+    if (!string.IsNullOrEmpty(databaseUrl))
     {
+        var uri = new Uri(databaseUrl);
+        var userInfo = uri.UserInfo.Split(':');
+
         var connectionString =
-            $"Host={host};" +
-            $"Port={port};" +
-            $"Database={database};" +
-            $"Username={user};" +
-            $"Password={password};" +
+            $"Host={uri.Host};" +
+            $"Port={uri.Port};" +
+            $"Database={uri.AbsolutePath.TrimStart('/')};" +
+            $"Username={userInfo[0]};" +
+            $"Password={userInfo[1]};" +
             $"SSL Mode=Require;Trust Server Certificate=true";
 
         options.UseNpgsql(connectionString);
