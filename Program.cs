@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using NkatekoBarberWeb.Models;
-using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,26 +14,30 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         var uri = new Uri(databaseUrl);
         var userInfo = uri.UserInfo.Split(':');
 
-        var connectionString = new NpgsqlConnectionStringBuilder
-        {
-            Host = uri.Host,
-            Port = uri.Port,
-            Username = userInfo[0],
-            Password = userInfo[1],
-            Database = uri.AbsolutePath.Trim('/'),
-            SslMode = SslMode.Require
-        }.ToString();
+        var connectionString =
+            $"Host={uri.Host};" +
+            $"Port={uri.Port};" +
+            $"Database={uri.AbsolutePath.TrimStart('/')};" +
+            $"Username={userInfo[0]};" +
+            $"Password={userInfo[1]};" +
+            $"SSL Mode=Require;Trust Server Certificate=true";
 
         options.UseNpgsql(connectionString);
     }
     else
     {
-        options.UseNpgsql(
-            builder.Configuration.GetConnectionString("DefaultConnection"));
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
     }
 });
 
 var app = builder.Build();
+
+// 🔥 AUTO MIGRATIONS
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 if (!app.Environment.IsDevelopment())
 {
@@ -48,23 +51,7 @@ app.UseRouting();
 app.UseAuthorization();
 app.MapRazorPages();
 
-
-// 🔥 SAFE DATABASE CREATION (NO CRASH)
-using (var scope = app.Services.CreateScope())
-{
-    try
-    {
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        db.Database.EnsureCreated();
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Database error: {ex.Message}");
-    }
-}
-
-
-// 🔥 Railway Port Configuration
+// Railway port
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://0.0.0.0:{port}");
 
