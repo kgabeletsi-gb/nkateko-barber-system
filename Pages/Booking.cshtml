@@ -1,0 +1,129 @@
+@page
+@model NkatekoBarberWeb.Pages.BookingModel
+@{
+    ViewData["Title"] = "Book Appointment";
+}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+        min-height: 100vh;
+    }
+
+    .booking-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+
+    .booking-card {
+        background: rgba(20, 20, 20, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 40px;
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        border: 1px solid #2a2a2a;
+    }
+
+    .booking-card h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: white;
+        font-weight: 600;
+    }
+
+    label {
+        color: #ccc;
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+
+    .form-control, .form-select {
+        background-color: #1f1f1f;
+        border: 1px solid #333;
+        color: white;
+        height: 45px;
+    }
+
+    .form-control:focus, .form-select:focus {
+        background-color: #1f1f1f;
+        border-color: #d4af37;
+        box-shadow: none;
+        color: white;
+    }
+
+    .btn-gold {
+        background-color: #d4af37;
+        border: none;
+        height: 45px;
+        font-weight: 600;
+        transition: 0.3s ease;
+    }
+
+    .btn-gold:hover {
+        background-color: #f1c94c;
+        transform: translateY(-2px);
+    }
+
+    .success-message {
+        background-color: #1e3d2f;
+        color: #8fffc4;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 14px;
+    }
+</style>
+
+<div class="booking-wrapper">
+    <div class="booking-card">
+
+        <h2>Book Appointment</h2>
+
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div class="success-message">
+                @Model.Message
+            </div>
+        }
+
+        <form method="post">
+            <div class="mb-3">
+                <label>Name</label>
+                <input asp-for="NewBooking.CustomerName" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label>Phone</label>
+                <input asp-for="NewBooking.PhoneNumber" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label>Date</label>
+                <input asp-for="NewBooking.AppointmentDate" type="date" class="form-control" />
+            </div>
+
+            <div class="mb-4">
+                <label>Service</label>
+                <select asp-for="NewBooking.ServiceName" class="form-select">
+                    @foreach (var service in Model.Services)
+                    {
+                        <option value="@service.Name">
+                            @service.Name - R @service.Price
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-gold w-100">
+                Book Now
+            </button>
+        </form>
+
+    </div>
+</div>

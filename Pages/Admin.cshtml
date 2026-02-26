@@ -1,0 +1,114 @@
+@page
+@model NkatekoBarberWeb.Pages.AdminModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+        min-height: 100vh;
+        color: white;
+    }
+
+    .admin-wrapper {
+        padding: 60px 20px;
+    }
+
+    .dashboard-title {
+        font-size: 32px;
+        font-weight: 600;
+        margin-bottom: 30px;
+    }
+
+    .summary-card {
+        background: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        margin-bottom: 40px;
+    }
+
+    .summary-card h4 {
+        color: #d4af37;
+        font-weight: 600;
+    }
+
+    .table-dark-custom {
+        background-color: #1a1a1a;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #2a2a2a;
+    }
+
+    .table-dark-custom thead {
+        background-color: #111;
+    }
+
+    .table-dark-custom th {
+        color: #d4af37;
+        border-color: #2a2a2a;
+    }
+
+    .table-dark-custom td {
+        border-color: #2a2a2a;
+        color: #ddd;
+    }
+
+    .no-bookings {
+        text-align: center;
+        padding: 40px;
+        color: #888;
+    }
+</style>
+
+<div class="container admin-wrapper">
+
+    <div class="dashboard-title">
+        Admin Dashboard
+    </div>
+
+    <!-- Income Summary -->
+    <div class="summary-card">
+        <h4>Total Income</h4>
+        <h2>R @Model.TotalIncome</h2>
+    </div>
+
+    <!-- Bookings Table -->
+    <div class="table-responsive table-dark-custom">
+        <table class="table table-dark mb-0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Date</th>
+                    <th>Service</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Bookings.Count == 0)
+                {
+                    <tr>
+                        <td colspan="4" class="no-bookings">
+                            No bookings yet.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var booking in Model.Bookings)
+                    {
+                        <tr>
+                            <td>@booking.CustomerName</td>
+                            <td>@booking.PhoneNumber</td>
+                            <td>@booking.AppointmentDate.ToShortDateString()</td>
+                            <td>@booking.ServiceName</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>

@@ -1,0 +1,7 @@
+C:\Users\njabu\OneDrive\Documents\barbershop\NkatekoBarberWeb\obj\Debug\net8.0\NkatekoBarberWeb.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\njabu\OneDrive\Documents\barbershop\NkatekoBarberWeb\obj\Debug\net8.0\NkatekoBarberWeb.AssemblyInfoInputs.cache
+C:\Users\njabu\OneDrive\Documents\barbershop\NkatekoBarberWeb\obj\Debug\net8.0\NkatekoBarberWeb.AssemblyInfo.cs
+C:\Users\njabu\OneDrive\Documents\barbershop\NkatekoBarberWeb\obj\Debug\net8.0\NkatekoBarberWeb.csproj.CoreCompileInputs.cache
+C:\Users\njabu\OneDrive\Documents\barbershop\NkatekoBarberWeb\obj\Debug\net8.0\NkatekoBarberWeb.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\njabu\OneDrive\Documents\barbershop\NkatekoBarberWeb\obj\Debug\net8.0\NkatekoBarberWeb.RazorAssemblyInfo.cache
+C:\Users\njabu\OneDrive\Documents\barbershop\NkatekoBarberWeb\obj\Debug\net8.0\NkatekoBarberWeb.RazorAssemblyInfo.cs
