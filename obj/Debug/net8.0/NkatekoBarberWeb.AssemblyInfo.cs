@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NkatekoBarberWeb")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8fc5aba5db715f43afdb5969901cb94a12435a6d")]
 [assembly: System.Reflection.AssemblyProductAttribute("NkatekoBarberWeb")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NkatekoBarberWeb")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
