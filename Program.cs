@@ -7,19 +7,20 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+    var host = Environment.GetEnvironmentVariable("PGHOST");
+    var port = Environment.GetEnvironmentVariable("PGPORT");
+    var user = Environment.GetEnvironmentVariable("PGUSER");
+    var password = Environment.GetEnvironmentVariable("PGPASSWORD");
+    var database = Environment.GetEnvironmentVariable("PGDATABASE");
 
-    if (!string.IsNullOrEmpty(databaseUrl))
+    if (!string.IsNullOrEmpty(host))
     {
-        var uri = new Uri(databaseUrl);
-        var userInfo = uri.UserInfo.Split(':');
-
         var connectionString =
-            $"Host={uri.Host};" +
-            $"Port={uri.Port};" +
-            $"Database={uri.AbsolutePath.TrimStart('/')};" +
-            $"Username={userInfo[0]};" +
-            $"Password={userInfo[1]};" +
+            $"Host={host};" +
+            $"Port={port};" +
+            $"Database={database};" +
+            $"Username={user};" +
+            $"Password={password};" +
             $"SSL Mode=Require;Trust Server Certificate=true";
 
         options.UseNpgsql(connectionString);
@@ -32,7 +33,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
-// 🔥 AUTO MIGRATIONS
+// Auto migrations
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -51,8 +52,7 @@ app.UseRouting();
 app.UseAuthorization();
 app.MapRazorPages();
 
-// Railway port
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-app.Urls.Add($"http://0.0.0.0:{port}");
+var portEnv = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://0.0.0.0:{portEnv}");
 
 app.Run();
