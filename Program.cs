@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NkatekoBarberWeb.Models;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,11 +8,31 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    var connectionString =
-        Environment.GetEnvironmentVariable("DATABASE_URL")
-        ?? builder.Configuration.GetConnectionString("DefaultConnection");
+    var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
-    options.UseNpgsql(connectionString);
+    if (!string.IsNullOrEmpty(databaseUrl))
+    {
+        var uri = new Uri(databaseUrl);
+        var userInfo = uri.UserInfo.Split(':');
+
+        var connectionString = new NpgsqlConnectionStringBuilder
+        {
+            Host = uri.Host,
+            Port = uri.Port,
+            Username = userInfo[0],
+            Password = userInfo[1],
+            Database = uri.AbsolutePath.Trim('/'),
+            SslMode = SslMode.Require,
+            TrustServerCertificate = true
+        }.ToString();
+
+        options.UseNpgsql(connectionString);
+    }
+    else
+    {
+        options.UseNpgsql(
+            builder.Configuration.GetConnectionString("DefaultConnection"));
+    }
 });
 
 var app = builder.Build();
@@ -24,12 +45,18 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
-
 app.MapRazorPages();
+
+
+// 🔥 AUTO APPLY MIGRATIONS
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
 
 // 🔥 Railway Port Configuration
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
