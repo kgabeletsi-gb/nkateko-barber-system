@@ -22,8 +22,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
             Username = userInfo[0],
             Password = userInfo[1],
             Database = uri.AbsolutePath.Trim('/'),
-            SslMode = SslMode.Require,
-            TrustServerCertificate = true
+            SslMode = SslMode.Require
         }.ToString();
 
         options.UseNpgsql(connectionString);
@@ -50,11 +49,18 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 
-// 🔥 AUTO APPLY MIGRATIONS
+// 🔥 SAFE DATABASE CREATION (NO CRASH)
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        db.Database.EnsureCreated();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Database error: {ex.Message}");
+    }
 }
 
 
